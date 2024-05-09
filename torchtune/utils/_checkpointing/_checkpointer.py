@@ -571,7 +571,8 @@ class FullModelMetaCheckpointer(_CheckpointerInterface):
 
         if self._adapter_checkpoint:
             adapter_state_dict = safe_torch_load(self._adapter_checkpoint)
-            state_dict[utils.ADAPTER_KEY] = adapter_state_dict
+            for k, v in adapter_state_dict.items():
+              state_dict[utils.MODEL_KEY][k] = v 
 
         if self._resume_from_checkpoint:
             recipe_state = safe_torch_load(self._recipe_checkpoint)

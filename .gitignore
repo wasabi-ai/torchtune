@@ -187,3 +187,5 @@ cover/
 
 # wandb
 wandb/
+
+checkpoints

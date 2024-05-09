@@ -1,3 +1,13 @@
+# Setup
+
+```
+pip install -e .
+```
+
+# Syncing data to R2
+
+rclone sync --s3-upload-concurrency 32 --s3-disable-checksum --ignore-checksum  --transfers=32  -P . r2-backup:ml-clone/torchtune -s3-upload-cutoff=250M --s3-chunk-size=250M
+
 # Effect of seeds on fine-tuning with Lora
 
 * Try out using LORA and LLama-3-8b, fine-tune against a dataset N times, and
@@ -24,6 +34,6 @@ dataset to see what happens.
 tune run lora_finetune_single_device --config llama3/8B_lora_single_device
 ```
 
-
-
-
+With compilation active, this takes approximate 30 minutes to fine-tune a single
+run, so clearly some batch tuning could be valuable. We'll run this overnight to
+collect a number of different sample checkpoints.

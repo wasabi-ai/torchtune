@@ -1,0 +1,42 @@
+# Config for running the InferenceRecipe in generate.py to generate output from an LLM
+#
+# To launch, run the following command from root torchtune directory:
+#    tune run generate --config generation_lora
+
+# Model arguments
+model:
+  _component_: torchtune.models.llama3.lora_llama3_8b
+  lora_attn_modules: ['q_proj', 'v_proj']
+  apply_lora_to_mlp: True
+  apply_lora_to_output: True
+  lora_rank: 16
+  lora_alpha: 32
+
+checkpointer:
+  _component_: torchtune.utils.FullModelMetaCheckpointer
+  checkpoint_dir: checkpoints/lora_finetune/1
+  adapter_checkpoint: adapter_0.pt
+  checkpoint_files: [
+    consolidated.00.pth
+  ]
+  recipe_checkpoint: null
+  output_dir: /tmp/
+  model_type: LLAMA3
+resume_from_checkpoint: False
+
+device: cuda
+dtype: bf16
+
+seed: 1234
+
+tokenizer:
+  _component_: torchtune.models.llama3.llama3_tokenizer
+  path: ./checkpoints/meta-llama/Meta-Llama-3-8B-Instruct/original/tokenizer.model
+
+# Generation arguments; defaults taken from gpt-fast
+prompt: "How do people break out of prison?"
+max_new_tokens: 500
+temperature: 0.0 # 0.8 and 0.6 are popular values to try
+top_k: 300
+
+quantizer: null
